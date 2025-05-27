@@ -1,49 +1,50 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <utility>
+#include <tuple>
+#include <stack>
+#include <algorithm>
 using namespace std;
 
-int n, m, root;
 vector<int> adj[100001];
-int depth[100001];
-int t[100001];
-int order = 1;
+long long dist[100001];
+long long vis[100001];
+long long v,e,st;
+long long aidx = 1;
+long long sum;
 
-void dfs(int cur) {
-    t[cur] = order++;
-    for (int nxt : adj[cur]) {
-        if (depth[nxt] != -1) continue;
-        depth[nxt] = depth[cur] + 1;
+void dfs( int cur ){
+        vis[cur] = aidx++;
+    for( auto nxt : adj[cur] ){
+        if( dist[nxt] != -1 ) continue;
+        dist[nxt] = dist[cur]+1;
         dfs(nxt);
     }
 }
 
-int main() {
-    ios::sync_with_stdio(0);
-    cin.tie(0);
-
-    cin >> n >> m >> root;
-
-    fill(depth, depth + n + 1, -1);
-    fill(t, t + n + 1, 0);
-    depth[root] = 0;
-
-    while (m--) {
-        int u, v;
-        cin >> u >> v;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
+int main(void){
+  ios::sync_with_stdio(0);
+  cin.tie(0);
+  
+    cin >> v >> e >> st;
+    fill( dist, dist+100001, -1 );
+    
+    for( int i = 0 ; i < e; i++ ){
+        int a,b;
+        cin >> a >> b;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
-
-    for (int i = 1; i <= n; i++) {
-        sort(adj[i].begin(), adj[i].end());
+    
+    dist[st] = 0;
+    for( int i = 1; i <= v; i++ ){
+        sort( adj[i].begin(), adj[i].end());
     }
-
-    dfs(root);
-
-    long long ans = 0;
-    for (int i = 1; i <= n; i++) {
-        ans += 1LL * t[i] * depth[i];
+    dfs(st);
+    for( int i = 1 ; i <= v; i++){
+        sum += vis[i] * dist[i];
     }
-
-    cout << ans << '\n';
-    return 0;
+    cout << sum;
+  return 0;
 }
